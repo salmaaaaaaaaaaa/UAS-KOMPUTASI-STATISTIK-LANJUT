@@ -1,0 +1,79 @@
+---
+title: "UAS KOMPUTASI STATISTIK LANJUT"
+author: "SALMA APRILIA"
+date: "2022-12-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=TRUE}
+library(wordcloud)
+library(tm)
+library(textclean)
+library(tidytext)
+review <- read.csv("~/salma/MK SEM.5 SALMA/MK.KOMPUTASI STATISTIK LANJUT/Womens Clothing E-Commerce Reviews.csv", stringsAsFactors=TRUE)
+head(review)
+```
+
+```{r, include=TRUE}
+#mengubah data frame menjadi data vektor
+rev<- review$Review.Text
+head (rev)
+```
+
+```{r, include=TRUE}
+#text cleaning
+
+#mengubah kapital menjadi huruf kecil
+rev <- tolower(rev)
+head(rev)
+```
+```{r, include = TRUE}
+#mengembalikan kata yang disingkat menjadi kata aslinya
+rev <- replace_contraction(rev)
+head(rev)
+```
+
+```{r, include=TRUE}
+#mengembalikan kata yang mengalami perpanjangan menjadi kata aslinya
+rev <- replace_word_elongation(rev)
+head(rev)
+```
+ 
+```{r, include=TRUE}
+#menghapus huruf yang bukan kata
+rev <- strip(rev)
+head(rev)
+```
+
+```{r, include=TRUE}
+#menghapus beberapa kata
+rev <-removeWords(rev, c("the","that","but","and","was","this","with","all","too","have","are",
+                   "will","did","fit","can","than","well","still","these","when",
+                   "just","has","not","for","saw","also","after",
+                   "would","bit","they","more","more","were","see","does","had",","))
+head(rev)
+```
+
+```{r, include= FALSE} 
+
+##mengubah data frame menjadi data faktor
+tdm <- TermDocumentMatrix(rev)
+m <- as.matrix(tdm)
+v <- sort(rowSums(m),decreasing = TRUE)
+##mengubah data faktor menjadi data frame
+d <- data.frame(word = names(v), freq = v)
+```
+
+```{r, include=TRUE}
+wordcloud(d$word, d$freq,
+          random.order = FALSE,
+          max.words = 500,
+           colors = brewer.pal(name = "Dark2",8 )) 
+```
+
+Dari hasil wordcloud diatas dapat menunjukkan bahwa kata yang paling sering digunakan
+dalam data teks diatas adalah kata "dress". kita juga dapat melihat beberapa kata yang paling sering digunakan dalam data teks tersebut dengan melihat ukuran dari masing-masing kata yang ada pada wordcloud.
